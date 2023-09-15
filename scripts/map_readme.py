@@ -4,7 +4,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import re 
 
-df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data.tsv", sep="\t", decimal=".")
+df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\t", decimal=".")
 
 fig, ax = plt.subplots(figsize=(15, 10), subplot_kw={'projection': ccrs.PlateCarree()})
 ax.set_title('World Map with Data Points', fontsize=16)
