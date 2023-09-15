@@ -9,8 +9,8 @@ archive = list(df["archive_project"])
 
 html = """
 Project name:<br>
-<a href="https://www.google.com/search?q=%%22%s%%22" target="_blank">%s</a><br>
-Country: %s
+<a href="https://www.ncbi.nlm.nih.gov/search/all/?term=%%22%s%%22" target="_blank">%s</a><br>
+Study primary focus: %s
 """
 
 
