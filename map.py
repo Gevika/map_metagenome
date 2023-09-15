@@ -1,7 +1,7 @@
 import folium
 import pandas
 
-data = pandas.read_csv("data.tsv")
+df = pandas.read_csv("data.tsv")
 lat = list(df["latitude"])
 lon = list(df["longitude"])
 name_list = list(df["study_primary_focus"])
