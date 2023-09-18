@@ -17,6 +17,7 @@ ax.add_feature(cfeature.RIVERS)
 ax.gridlines(draw_labels=True, dms=True, x_inline=False, y_inline=False)
 
 plt.scatter(df['longitude'], df['latitude'], s=100, c='red', marker='o', label=df['geo_loc_name'])
+plt.tight_layout()
 plt.savefig("images/map_image.png")
 
 with open('README.md', 'r') as file:
