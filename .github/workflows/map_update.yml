@@ -39,6 +39,6 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git remote set-url origin https://${{secrets.MAP_METAGENOME}}@github.com/Gevika/map_metagenome.git
-        git add README.md images/map_image.png
+        git add README.md images/map_image.png index.html
         git commit -m "Update map visualization in README.md"
         git push
