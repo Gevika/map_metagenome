@@ -32,7 +32,7 @@ jobs:
 
     - name: Run map visualization script
       run: |
-        python scripts/map_readme.py
+        python scripts/map.py
 
     - name: Commit and push changes
       run: |
