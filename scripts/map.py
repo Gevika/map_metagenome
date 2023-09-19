@@ -88,12 +88,14 @@ controls_js = f'''
         console.log("Updating map with:", minDepth, maxDepth, showNone, showUnknown);
         const markers = document.querySelectorAll(".leaflet-marker-icon");
         markers.forEach(marker => {{
-            const depth = parseFloat(marker.getAttribute("data-depth"));
+            const depthStr = marker.getAttribute("data-depth");
+            const depth = parseFloat(depthStr);
             const isVisible = (
                 (!isNaN(depth) && depth >= minDepth && depth <= maxDepth) ||
-                (showNone && (marker.getAttribute("data-depth") === "None" || marker.getAttribute("data-depth") === "nan")) ||
-                (showUnknown && marker.getAttribute("data-depth") === "unknown")
+                (showNone && (depthStr === "None" || depthStr === "nan")) ||
+                (showUnknown && depthStr === "unknown")
             );
+            console.log("Is marker visible:", isVisible);
             marker.style.display = isVisible ? "block" : "none";
         }});
     }}
