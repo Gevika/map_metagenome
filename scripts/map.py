@@ -89,8 +89,9 @@ controls_js = '''
     }}
 
     document.getElementById("depth-slider").addEventListener("input", function(event) {{
-    minDepth = event.target.value[0];
-    maxDepth = event.target.value[1];
+    const [minVal, maxVal] = event.target.value.split(',').map(Number);
+    minDepth = minVal;
+    maxDepth = maxVal;
     updateMap();
 }});
     document.getElementById("none-button").addEventListener("click", function() {{
