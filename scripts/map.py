@@ -31,6 +31,59 @@ map.add_child(folium.LayerControl())
 
 map.save("index.html")
 
+# Simplifying the code using multi-line strings
+
+controls_html = """
+<!-- Depth Slider -->
+<div style="margin: 20px;">
+    <label for="depth-slider">Depth Range:</label>
+    <input type="range" min="0" max="100" step="1" id="depth-slider" value="0,100" multiple>
+</div>
+
+<!-- Buttons for None and Unknown -->
+<div style="margin: 20px;">
+    <button id="none-button">Toggle None</button>
+    <button id="unknown-button">Toggle Unknown</button>
+</div>
+"""
+
+controls_js = """
+<script>
+    let minDepth = 0;
+    let maxDepth = 100;
+    let showNone = true;
+    let showUnknown = true;
+
+    function updateMap() {
+        // TODO: Implement map update logic
+    }
+
+    document.getElementById("depth-slider").addEventListener("input", function(event) {
+        minDepth = event.target.value[0];
+        maxDepth = event.target.value[1];
+        updateMap();
+    });
+
+    document.getElementById("none-button").addEventListener("click", function() {
+        showNone = !showNone;
+        updateMap();
+    });
+
+    document.getElementById("unknown-button").addEventListener("click", function() {
+        showUnknown = !showUnknown;
+        updateMap();
+    });
+</script>
+"""
+
+# Adding controls to the HTML file in a simplified manner
+with open('index.html', 'a') as file:
+    file.write(controls_html)
+    file.write(controls_js)
+
+# Displaying the simplified code for review
+controls_html + controls_js
+
 # map_readme
 fig, ax = plt.subplots(figsize=(15, 10), subplot_kw={'projection': ccrs.PlateCarree()})
 ax.set_title('World Map with Data Points', fontsize=16)
