@@ -15,15 +15,14 @@ max_depth = df['depth_numeric'].max()
 # Create map
 m = folium.Map(location=[47, 2], zoom_start=3, tiles="Stamen Terrain")
 for index, row in df.iterrows():
+    depth_value = str(row["depth"])
     popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={{row["archive_project"]}}" target="_blank">{{row["archive_project"]}}</a><br>Study primary focus: {{row["study_primary_focus"]}}'
     popup = folium.Popup(popup_content, max_width=300)
-    folium.CircleMarker(
+    icon = folium.CustomIcon(icon_image='', html=f'<div data-depth="{depth_value}"></div>')
+    folium.Marker(
         location=(row["latitude"], row["longitude"]),
-        radius=6,
         popup=popup,
-        fill_color='red',
-        color='grey',
-        fill_opacity=0.7
+        icon=icon
     ).add_to(m)
 
 depth_values = [str(row["depth"]) for _, row in df.iterrows()]
