@@ -7,37 +7,56 @@ import re
 
 df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\t", decimal=".")
 
-# map_html
-lat = list(df["latitude"])
-lon = list(df["longitude"])
-name_list = list(df["study_primary_focus"])
-archive = list(df["archive_project"])
+# Convert the 'depth' column to numeric, setting errors='coerce' to turn invalid parsing into NaN
+df['depth_numeric'] = pd.to_numeric(df['depth'], errors='coerce')
 
-html = """
-Project name:<br>
-<a href="https://www.ncbi.nlm.nih.gov/search/all/?term=%%22%s%%22" target="_blank">%s</a><br>
-Study primary focus: %s
-"""
+# Get min and max values, excluding NaN values
+min_depth = df['depth_numeric'].min()
+max_depth = df['depth_numeric'].max()
 
-map = folium.Map(location=[47, 2], zoom_start=3, tiles="Stamen Terrain")
-fgv = folium.FeatureGroup(name="Metagenomic samples")
+# Create map
+m = folium.Map(location=[47, 2], zoom_start=3, tiles="Stamen Terrain")
 
-for lt, ln, name, archive_name in zip(lat, lon, name_list, archive):
-    iframe = folium.IFrame(html=html % (archive_name, archive_name, name), width=200, height=100)
-    fgv.add_child(folium.CircleMarker(location=[lt, ln], radius=6, popup=folium.Popup(iframe), fill_color='red', color='grey', fill_opacity=0.7))
+# Add points to map
+for index, row in df.iterrows():
+    depth_value = str(row["depth"])
+    popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={row["archive_project"]}" target="_blank">{row["archive_project"]}</a><br>Study primary focus: {row["study_primary_focus"]}'
+    popup = folium.Popup(popup_content, max_width=300)
+    marker = folium.CircleMarker(
+        location=(row["latitude"], row["longitude"]),
+        radius=6,
+        popup=popup,
+        fill_color='red',
+        color='grey',
+        fill_opacity=0.7
+    ).add_to(m)
 
-map.add_child(fgv)
-map.add_child(folium.LayerControl())
+# Save map to HTML file
+m.save("index.html")
 
-map.save("index.html")
+# Additional JS to set data-depth attributes for each marker after they are created
+js_code = '''
+<script>
+    document.addEventListener('DOMContentLoaded', function() {{
+        const markers = document.querySelectorAll('.leaflet-marker-icon');
+        const depths = {list(df['depth'].astype(str).values)};
+        markers.forEach((marker, idx) => {{
+            marker.setAttribute('data-depth', depths[idx]);
+        }});
+    }});
+</script>
+'''
 
-# Simplifying the code using multi-line strings
+# Add JS to the HTML file
+with open('index.html', 'a') as file:
+    file.write(js_code)
 
-controls_html = """
+# Add controls to the HTML file using the calculated min_depth and max_depth
+controls_html = f'''
 <!-- Depth Slider -->
 <div style="margin: 20px;">
     <label for="depth-slider">Depth Range:</label>
-    <input type="range" min="0" max="100" step="1" id="depth-slider" value="0,100" multiple>
+    <input type="range" min="{min_depth}" max="{max_depth}" step="1" id="depth-slider" value="{min_depth},{max_depth}" multiple>
 </div>
 
 <!-- Buttons for None and Unknown -->
@@ -45,44 +64,49 @@ controls_html = """
     <button id="none-button">Toggle None</button>
     <button id="unknown-button">Toggle Unknown</button>
 </div>
-"""
+'''
 
-controls_js = """
+controls_js = '''
 <script>
     let minDepth = 0;
     let maxDepth = 100;
     let showNone = true;
     let showUnknown = true;
 
-    function updateMap() {
-        // TODO: Implement map update logic
-    }
+    function updateMap() {{
+        const markers = document.querySelectorAll(".leaflet-marker-icon");
+        markers.forEach(marker => {{
+            const depth = parseFloat(marker.getAttribute("data-depth"));
+            const isVisible = (
+                (!isNaN(depth) && depth >= minDepth && depth <= maxDepth) || 
+                (showNone && marker.getAttribute("data-depth") === "None") || 
+                (showUnknown && marker.getAttribute("data-depth") === "unknown")
+            );
+            marker.style.display = isVisible ? "block" : "none";
+        }});
+    }}
 
-    document.getElementById("depth-slider").addEventListener("input", function(event) {
+    document.getElementById("depth-slider").addEventListener("input", function(event) {{
         minDepth = event.target.value[0];
         maxDepth = event.target.value[1];
         updateMap();
-    });
+    }});
 
-    document.getElementById("none-button").addEventListener("click", function() {
+    document.getElementById("none-button").addEventListener("click", function() {{
         showNone = !showNone;
         updateMap();
-    });
+    }});
 
-    document.getElementById("unknown-button").addEventListener("click", function() {
+    document.getElementById("unknown-button").addEventListener("click", function() {{
         showUnknown = !showUnknown;
         updateMap();
-    });
+    }});
 </script>
-"""
+'''
 
-# Adding controls to the HTML file in a simplified manner
 with open('index.html', 'a') as file:
     file.write(controls_html)
     file.write(controls_js)
-
-# Displaying the simplified code for review
-controls_html + controls_js
 
 # map_readme
 fig, ax = plt.subplots(figsize=(15, 10), subplot_kw={'projection': ccrs.PlateCarree()})
