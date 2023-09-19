@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import folium
+import json
 import re 
 
 # Load data
@@ -33,16 +34,17 @@ for index, row in df.iterrows():
     ).add_to(m)
 
 depth_values = [str(row["depth"]) for _, row in df.iterrows()]
+depth_values_str = json.dumps(depth_values)
 
 # Save map to HTML file
 m.save("index.html")
 
 # Additional JS to set data-depth attributes for each marker after they are created
-js_code = '''
+js_code = f'''
 <script>
     document.addEventListener('DOMContentLoaded', function() {{
         const markers = document.querySelectorAll('.leaflet-marker-icon');
-        const depths = {depth_values};  # Here we insert our list
+        const depths = {depth_values_str};  # Here we insert our list
         markers.forEach((marker, idx) => {{
             marker.setAttribute('data-depth', depths[idx]);
         }});
@@ -68,7 +70,7 @@ controls_html = f'''
 </div>
 '''
 
-controls_js = '''
+controls_js = f'''
 <script>
     let minDepth = {min_depth};
     let maxDepth = {max_depth};
