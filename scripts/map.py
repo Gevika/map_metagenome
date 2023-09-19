@@ -58,16 +58,23 @@ with open('index.html', 'a') as file:
 
 # Add controls to the HTML file using the calculated min_depth and max_depth
 controls_html = f'''
-<!-- Depth Slider -->
+<!-- Including noUiSlider CSS -->
+<link href="https://cdn.jsdelivr.net/npm/nouislider@14.6.4/distribute/nouislider.min.css" rel="stylesheet">
+
+<!-- Depth Slider Container -->
 <div style="margin: 20px;">
     <label for="depth-slider">Depth Range:</label>
-    <input type="range" min="{min_depth}" max="{max_depth}" step="1" id="depth-slider" value="{min_depth},{max_depth}" multiple>
+    <div id="depth-slider" style="margin-top: 10px;"></div>
 </div>
+
 <!-- Buttons for None and Unknown -->
 <div style="margin: 20px;">
     <button id="none-button">Toggle None</button>
     <button id="unknown-button">Toggle Unknown</button>
 </div>
+
+<!-- Including noUiSlider JS -->
+<script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.4/distribute/nouislider.min.js"></script>
 '''
 
 controls_js = f'''
@@ -82,29 +89,48 @@ controls_js = f'''
         markers.forEach(marker => {{
             const depth = parseFloat(marker.getAttribute("data-depth"));
             const isVisible = (
-        (!isNaN(depth) && depth >= minDepth && depth <= maxDepth) || 
-        (showNone && (marker.getAttribute("data-depth") === "None" || marker.getAttribute("data-depth") === "nan")) || 
-        (showUnknown && marker.getAttribute("data-depth") === "unknown")
-        );
-
+                (!isNaN(depth) && depth >= minDepth && depth <= maxDepth) ||
+                (showNone && (marker.getAttribute("data-depth") === "None" || marker.getAttribute("data-depth") === "nan")) ||
+                (showUnknown && marker.getAttribute("data-depth") === "unknown")
+            );
             marker.style.display = isVisible ? "block" : "none";
         }});
     }}
 
-    document.getElementById("depth-slider").addEventListener("input", function(event) {{
-    const [minVal, maxVal] = event.target.value.split(',').map(Number);
-    minDepth = minVal;
-    maxDepth = maxVal;
-    updateMap();
-}});
     document.getElementById("none-button").addEventListener("click", function() {{
-    showNone = !showNone;
-    updateMap();
-}});
+        showNone = !showNone;
+        updateMap();
+    }});
     document.getElementById("unknown-button").addEventListener("click", function() {{
-    showUnknown = !showUnknown;
-    updateMap();
-}});
+        showUnknown = !showUnknown;
+        updateMap();
+    }});
+
+    // Initialize noUiSlider with two handles
+    const slider = document.getElementById('depth-slider');
+    noUiSlider.create(slider, {{
+        start: [{min_depth}, {max_depth}],
+        connect: true,
+        step: 1,
+        range: {{
+            'min': {min_depth},
+            'max': {max_depth}
+        }},
+        tooltips: [true, true],
+        format: {{
+            to: function(value) {{
+                return value.toFixed(1);
+            }},
+            from: function(value) {{
+                return parseFloat(value);
+            }}
+        }}
+    }});
+    slider.noUiSlider.on('update', function(values, handle) {{
+        minDepth = parseFloat(values[0]);
+        maxDepth = parseFloat(values[1]);
+        updateMap();
+    }});
 </script>
 '''
 
