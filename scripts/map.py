@@ -82,10 +82,11 @@ controls_js = f'''
         markers.forEach(marker => {{
             const depth = parseFloat(marker.getAttribute("data-depth"));
             const isVisible = (
-                (!isNaN(depth) && depth >= minDepth && depth <= maxDepth) || 
-                (showNone && marker.getAttribute("data-depth") === "None") || 
-                (showUnknown && marker.getAttribute("data-depth") === "unknown")
-            );
+        (!isNaN(depth) && depth >= minDepth && depth <= maxDepth) || 
+        (showNone && (marker.getAttribute("data-depth") === "None" || marker.getAttribute("data-depth") === "nan")) || 
+        (showUnknown && marker.getAttribute("data-depth") === "unknown")
+        );
+
             marker.style.display = isVisible ? "block" : "none";
         }});
     }}
