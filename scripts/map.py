@@ -32,6 +32,8 @@ for index, row in df.iterrows():
         fill_opacity=0.7
     ).add_to(m)
 
+depth_values = [str(row["depth"]) for _, row in df.iterrows()]
+
 # Save map to HTML file
 m.save("index.html")
 
@@ -40,7 +42,7 @@ js_code = '''
 <script>
     document.addEventListener('DOMContentLoaded', function() {{
         const markers = document.querySelectorAll('.leaflet-marker-icon');
-        const depths = {depth_values_list};
+        const depths = {depth_values};  # Here we insert our list
         markers.forEach((marker, idx) => {{
             marker.setAttribute('data-depth', depths[idx]);
         }});
@@ -57,9 +59,8 @@ controls_html = f'''
 <!-- Depth Slider -->
 <div style="margin: 20px;">
     <label for="depth-slider">Depth Range:</label>
-    <input type="range" min="{{min_depth}}" max="{{max_depth}}" step="1" id="depth-slider" value="{{min_depth}},{{max_depth}}" multiple>
+    <input type="range" min="{min_depth}" max="{max_depth}" step="1" id="depth-slider" value="{min_depth},{max_depth}" multiple>
 </div>
-
 <!-- Buttons for None and Unknown -->
 <div style="margin: 20px;">
     <button id="none-button">Toggle None</button>
@@ -69,8 +70,8 @@ controls_html = f'''
 
 controls_js = '''
 <script>
-    let minDepth = {{min_depth}};
-    let maxDepth = {{max_depth}};
+    let minDepth = {min_depth};
+    let maxDepth = {max_depth};
     let showNone = true;
     let showUnknown = true;
 
@@ -88,21 +89,18 @@ controls_js = '''
     }}
 
     document.getElementById("depth-slider").addEventListener("input", function(event) {{
-        const values = event.target.value.split(',').map(val => parseFloat(val));
-        minDepth = values[0];
-        maxDepth = values[1];
-        updateMap();
-    }});
-
+    minDepth = event.target.value[0];
+    maxDepth = event.target.value[1];
+    updateMap();
+}});
     document.getElementById("none-button").addEventListener("click", function() {{
-        showNone = !showNone;
-        updateMap();
-    }});
-
+    showNone = !showNone;
+    updateMap();
+}});
     document.getElementById("unknown-button").addEventListener("click", function() {{
-        showUnknown = !showUnknown;
-        updateMap();
-    }});
+    showUnknown = !showUnknown;
+    updateMap();
+}});
 </script>
 '''
 
