@@ -85,6 +85,7 @@ controls_js = f'''
     let showUnknown = true;
 
     function updateMap() {{
+        console.log("Updating map with:", minDepth, maxDepth, showNone, showUnknown);
         const markers = document.querySelectorAll(".leaflet-marker-icon");
         markers.forEach(marker => {{
             const depth = parseFloat(marker.getAttribute("data-depth"));
