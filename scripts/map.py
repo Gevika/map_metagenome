@@ -44,7 +44,7 @@ js_code = f'''
 <script>
     document.addEventListener('DOMContentLoaded', function() {{
         const markers = document.querySelectorAll('.leaflet-marker-icon');
-        const depths = {depth_values_str};  # Here we insert our list
+        const depths = {depth_values_str};
         markers.forEach((marker, idx) => {{
             marker.setAttribute('data-depth', depths[idx]);
         }});
