@@ -5,7 +5,8 @@ import cartopy.feature as cfeature
 import folium
 import re 
 
-df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\t", decimal=".")
+# Load data
+df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\\t", decimal=".")
 
 # Convert the 'depth' column to numeric, setting errors='coerce' to turn invalid parsing into NaN
 df['depth_numeric'] = pd.to_numeric(df['depth'], errors='coerce')
@@ -20,7 +21,7 @@ m = folium.Map(location=[47, 2], zoom_start=3, tiles="Stamen Terrain")
 # Add points to map
 for index, row in df.iterrows():
     depth_value = str(row["depth"])
-    popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={row["archive_project"]}" target="_blank">{row["archive_project"]}</a><br>Study primary focus: {row["study_primary_focus"]}'
+    popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={{row["archive_project"]}}" target="_blank">{{row["archive_project"]}}</a><br>Study primary focus: {{row["study_primary_focus"]}}'
     popup = folium.Popup(popup_content, max_width=300)
     marker = folium.CircleMarker(
         location=(row["latitude"], row["longitude"]),
@@ -39,7 +40,7 @@ js_code = '''
 <script>
     document.addEventListener('DOMContentLoaded', function() {{
         const markers = document.querySelectorAll('.leaflet-marker-icon');
-        const depths = {list(df['depth'].astype(str).values)};
+        const depths = {depth_values_list};
         markers.forEach((marker, idx) => {{
             marker.setAttribute('data-depth', depths[idx]);
         }});
@@ -56,7 +57,7 @@ controls_html = f'''
 <!-- Depth Slider -->
 <div style="margin: 20px;">
     <label for="depth-slider">Depth Range:</label>
-    <input type="range" min="{min_depth}" max="{max_depth}" step="1" id="depth-slider" value="{min_depth},{max_depth}" multiple>
+    <input type="range" min="{{min_depth}}" max="{{max_depth}}" step="1" id="depth-slider" value="{{min_depth}},{{max_depth}}" multiple>
 </div>
 
 <!-- Buttons for None and Unknown -->
@@ -68,8 +69,8 @@ controls_html = f'''
 
 controls_js = '''
 <script>
-    let minDepth = 0;
-    let maxDepth = 100;
+    let minDepth = {{min_depth}};
+    let maxDepth = {{max_depth}};
     let showNone = true;
     let showUnknown = true;
 
@@ -87,8 +88,9 @@ controls_js = '''
     }}
 
     document.getElementById("depth-slider").addEventListener("input", function(event) {{
-        minDepth = event.target.value[0];
-        maxDepth = event.target.value[1];
+        const values = event.target.value.split(',').map(val => parseFloat(val));
+        minDepth = values[0];
+        maxDepth = values[1];
         updateMap();
     }});
 
