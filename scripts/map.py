@@ -14,11 +14,11 @@ max_depth = df['depth_numeric'].max()
 
 def get_color(depth):
     if isinstance(depth, float):
-        return 'green'
+        return 'red'
     elif depth == "unknown":
         return 'gray'
     else:
-        return 'red'
+        return 'green'
 
 # Create map
 m = folium.Map(location=[47, 2], zoom_start=3, tiles="Stamen Terrain")
