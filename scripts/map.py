@@ -13,7 +13,7 @@ min_depth = df['depth_numeric'].min()
 max_depth = df['depth_numeric'].max()
 
 def get_color(depth):
-    if depth == "None":
+    if depth == "nan":
         return 'red'
     elif depth == "unknown":
         return 'grey'
