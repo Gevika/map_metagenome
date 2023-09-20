@@ -13,12 +13,12 @@ min_depth = df['depth_numeric'].min()
 max_depth = df['depth_numeric'].max()
 
 def get_color(depth):
-    if depth == "nan":
-        return 'red'
+    if '.' in depth:
+        return 'green'
     elif depth == "unknown":
         return 'grey'
     else:
-        return 'blue'
+        return 'red'
 
 # Create map
 m = folium.Map(location=[47, 2], zoom_start=3, tiles="Stamen Terrain")
@@ -26,14 +26,14 @@ for index, row in df.iterrows():
     popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={{row["archive_project"]}}" target="_blank">{{row["archive_project"]}}</a><br>Study primary focus: {{row["study_primary_focus"]}}'
     popup = folium.Popup(popup_content, max_width=300)
     color = get_color(row["depth"])
-    folium.CircleMarker(
+    color = get_color(row["depth"])
+    icon = folium.Icon(color=color, icon_color='white')
+    folium.Marker(
         location=(row["latitude"], row["longitude"]),
-        radius=6,
         popup=popup,
-        fill_color=color,
-        color='grey',
-        fill_opacity=0.7
+        icon=icon
     ).add_to(m)
+
 
 m.save("index.html")
 
