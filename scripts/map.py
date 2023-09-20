@@ -5,11 +5,9 @@ import cartopy.feature as cfeature
 import folium
 import json
 import re 
-import subprocess
-subprocess.check_call(["pip", "install", "folium==0.12.1", "branca==0.4.2"])
 
 # Load data
-df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\\t", decimal=".")
+df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\t", decimal=".")
 
 # Convert the 'depth' column to numeric, setting errors='coerce' to turn invalid parsing into NaN
 df['depth_numeric'] = pd.to_numeric(df['depth'], errors='coerce')
@@ -21,34 +19,46 @@ max_depth = df['depth_numeric'].max()
 # Create map
 m = folium.Map(location=[47, 2], zoom_start=3, tiles="Stamen Terrain")
 
-# Add points to map
+# Define a custom Marker class with `data-depth` attribute
+class DepthMarker(folium.Marker):
+    _template = folium.Element("""
+        {% macro script(this, kwargs) %}
+            var {{this.get_name()}} = L.marker(
+                [{{this.location[0]}}, {{this.location[1]}}],
+                {
+                    icon: new L.DivIcon({
+                        className: 'leaflet-div-icon',
+                        html: '<div style="background-color: {{this.color}};" data-depth="{{this.depth}}"></div>',
+                        iconSize: [10, 10]
+                    })
+                }
+            ).addTo({{this._parent.get_name()}});
+        {% endmacro %}
+    """)
+    
+    def __init__(self, location, depth, color="red"):
+        super().__init__(location=location)
+        self._name = 'DepthMarker'
+        self.depth = depth
+        self.color = color
+
+# Add points to map using the custom marker
 for index, row in df.iterrows():
     depth_value = str(row["depth"])
-    popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={{row["archive_project"]}}" target="_blank">{{row["archive_project"]}}</a><br>Study primary focus: {{row["study_primary_focus"]}}'
+    popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={row["archive_project"]}" target="_blank">{row["archive_project"]}</a><br>Study primary focus: {row["study_primary_focus"]}'
     popup = folium.Popup(popup_content, max_width=300)
-    marker = folium.CircleMarker(
+    marker = DepthMarker(
         location=(row["latitude"], row["longitude"]),
-        radius=6,
-        popup=popup,
-        fill_color='red',
-        color='grey',
-        fill_opacity=0.7
+        depth=depth_value
     )
-    marker._template = folium.Element(f"""
-        var {{this._parent}} = L.circleMarker(
-            [{{this.lat}}, {{this.lng}}],
-            {{this.options}}
-        ).addTo({{this._parent}});
-        {{this._parent}}.bindPopup("{{this.popup}}", {{this.popupOptions}});
-        {{this._parent}}._icon.setAttribute('data-depth', '{depth_value}');
-    """)
+    marker.add_child(popup)
     marker.add_to(m)
-
-depth_values = [str(row["depth"]) for _, row in df.iterrows()]
-depth_values_str = json.dumps(depth_values)
 
 # Save map to HTML file
 m.save("index.html")
+
+depth_values = [str(row["depth"]) for _, row in df.iterrows()]
+depth_values_str = json.dumps(depth_values)
 
 # Additional JS to set data-depth attributes for each marker after they are created
 js_code = f'''
