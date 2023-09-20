@@ -5,6 +5,8 @@ import cartopy.feature as cfeature
 import folium
 import json
 import re 
+import subprocess
+subprocess.check_call(["pip", "install", "folium==0.12.1", "branca==0.4.2"])
 
 # Load data
 df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\\t", decimal=".")
