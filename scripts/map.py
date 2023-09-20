@@ -12,16 +12,25 @@ df['depth_numeric'] = pd.to_numeric(df['depth'], errors='coerce')
 min_depth = df['depth_numeric'].min()
 max_depth = df['depth_numeric'].max()
 
+def get_color(depth):
+    if depth == "None":
+        return 'red'
+    elif depth == "unknown":
+        return 'grey'
+    else:
+        return 'blue'
+
 # Create map
 m = folium.Map(location=[47, 2], zoom_start=3, tiles="Stamen Terrain")
 for index, row in df.iterrows():
     popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={{row["archive_project"]}}" target="_blank">{{row["archive_project"]}}</a><br>Study primary focus: {{row["study_primary_focus"]}}'
     popup = folium.Popup(popup_content, max_width=300)
+    color = get_color(row["depth"])
     folium.CircleMarker(
         location=(row["latitude"], row["longitude"]),
         radius=6,
         popup=popup,
-        fill_color='red',
+        fill_color=color,
         color='grey',
         fill_opacity=0.7
     ).add_to(m)
