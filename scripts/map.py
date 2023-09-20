@@ -31,8 +31,12 @@ m.save("index.html")
 depth_values = [str(row["depth"]) for _, row in df.iterrows()]
 depth_values_str = json.dumps(depth_values)
 
-# JavaScript код для установки атрибутов data-depth для каждого маркера после их создания
-js_code = f'''
+# Дополнительный JS и HTML для двойного ползунка
+slider_html = f'''
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css">
+<div id="depth-slider" style="margin-top: 50px; width: 80%; margin-left: 10%;"></div>
+<p id="slider-values" style="text-align: center;"></p>
+<script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {{
         const depths = {depth_values_str};
@@ -40,13 +44,48 @@ js_code = f'''
         markers.forEach((marker, idx) => {{
             marker.setAttribute('data-depth', depths[idx]);
         }});
+        
+        // Инициализация ползунка
+        var slider = document.getElementById('depth-slider');
+        noUiSlider.create(slider, {{
+            start: [{min_depth}, {max_depth}],
+            connect: true,
+            range: {{
+                'min': {min_depth},
+                'max': {max_depth}
+            }},
+            tooltips: [true, true],
+            format: {{
+                to: function(value) {{
+                    return value.toFixed(1);
+                }},
+                from: function(value) {{
+                    return value;
+                }}
+            }}
+        }});
+        
+        // Обновление видимости маркеров в соответствии с значениями ползунка
+        slider.noUiSlider.on('update', function (values, handle) {{
+            const min_val = parseFloat(values[0]);
+            const max_val = parseFloat(values[1]);
+            markers.forEach(marker => {{
+                const depth = parseFloat(marker.getAttribute('data-depth'));
+                if (depth < min_val || depth > max_val) {{
+                    marker.style.display = 'none';
+                }} else {{
+                    marker.style.display = '';
+                }}
+            }});
+            document.getElementById("slider-values").innerHTML = "Depth Range: " + values.map(val => val + "m").join(" to ");
+        }});
     }});
 </script>
 '''
 
 # Add JS to the HTML file
 with open('index.html', 'a') as file:
-    file.write(js_code)
+    file.write(slider_html)
 
 fig, ax = plt.subplots(figsize=(15, 10), subplot_kw={'projection': ccrs.PlateCarree()})
 ax.set_title('World Map with Data Points', fontsize=16)
