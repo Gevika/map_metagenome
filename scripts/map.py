@@ -7,16 +7,16 @@ import json
 import re 
 
 # Load data
-df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\\t", decimal=".")
+df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\\t", decimal=".", engine='python')
 df['depth_numeric'] = pd.to_numeric(df['depth'], errors='coerce')
 min_depth = df['depth_numeric'].min()
 max_depth = df['depth_numeric'].max()
 
 def get_color(depth):
-    if '.' in depth:
+    if isinstance(depth, float):
         return 'green'
     elif depth == "unknown":
-        return 'grey'
+        return 'gray'
     else:
         return 'red'
 
