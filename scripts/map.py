@@ -23,7 +23,9 @@ def get_color(depth):
 # Create map
 m = folium.Map(location=[47, 2], zoom_start=3, tiles="Stamen Terrain")
 for index, row in df.iterrows():
-    popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={row["archive_project"]}" target="_blank">{row["archive_project"]}</a><br>Study primary focus: {row["study_primary_focus"]}'
+    value1 = row['archive_project']
+    value2 = row['study_primary_focus']
+    popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={value1}" target="_blank">{value1}</a><br>Study primary focus:{value2}'
     popup = folium.Popup(popup_content, max_width=300)
     color = get_color(row["depth"])
     color = get_color(row["depth"])
