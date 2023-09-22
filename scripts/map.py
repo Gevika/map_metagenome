@@ -33,7 +33,8 @@ for index, row in df.iterrows():
     folium.Marker(
         location=(row["latitude"], row["longitude"]),
         popup=popup,
-        icon=icon
+        icon=icon,
+        shadow=False
     ).add_to(m)
 
 
