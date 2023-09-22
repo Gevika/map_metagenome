@@ -33,8 +33,7 @@ for index, row in df.iterrows():
     folium.Marker(
         location=(row["latitude"], row["longitude"]),
         popup=popup,
-        icon=icon,
-        shadow=False
+        icon=icon
     ).add_to(m)
 
 m.get_root().html.add_child(folium.Element('<script type="text/javascript">$(document).ready(function() {$(".leaflet-shadow-pane").empty();});</script>'))
