@@ -28,7 +28,6 @@ for index, row in df.iterrows():
     popup_content = f'Project name:<br><a href="https://www.ncbi.nlm.nih.gov/search/all/?term={value1}" target="_blank">{value1}</a><br>Study primary focus:{value2}'
     popup = folium.Popup(popup_content, max_width=300)
     color = get_color(row["depth"])
-    color = get_color(row["depth"])
     icon = folium.Icon(color=color, icon_color='white')
     folium.Marker(
         location=(row["latitude"], row["longitude"]),
@@ -41,7 +40,6 @@ m.save("index.html")
 depth_values = [str(row["depth"]) for _, row in df.iterrows()]
 depth_values_str = json.dumps(depth_values)
 
-# Дополнительный JS и HTML для двойного ползунка
 slider_html = f'''
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css">
 <div id="depth-slider" style="margin-top: 50px; width: 80%; margin-left: 10%;"></div>
@@ -50,14 +48,13 @@ slider_html = f'''
 <script>
     document.addEventListener('DOMContentLoaded', function() {{
         const depths = {depth_values_str};
-        const minDepth = {min_depth};
-        const maxDepth = {max_depth};
+        const min_val = {min_depth};
+        const max_val = {max_depth};
         const markers = document.querySelectorAll(".leaflet-interactive");
         markers.forEach((marker, idx) => {{
             marker.setAttribute('data-depth', depths[idx]);
         }});
         
-        // Инициализация ползунка
         var slider = document.getElementById('depth-slider');
         noUiSlider.create(slider, {{
             start: [{min_depth}, {max_depth}],
@@ -77,31 +74,31 @@ slider_html = f'''
             }}
         }});
         
-        // Обновление видимости маркеров в соответствии с значениями ползунка
         slider.noUiSlider.on('update', function (values, handle) {{
             const min_val = parseFloat(values[0]);
             const max_val = parseFloat(values[1]);
             markers.forEach(marker => {{
                 const depth = parseFloat(marker.getAttribute('data-depth'));
+                const markerTransform = marker.style.transform;
+                let sibling = marker.nextElementSibling;
+                while (sibling && sibling.style.transform !== markerTransform) {{
+                    sibling = sibling.nextElementSibling;
+                }
                 if (depth < min_val || depth > max_val) {{
                     marker.style.display = 'none';
-                    // Найти и скрыть тень маркера
-                    const shadow = marker.nextSibling; // предполагая, что тень является следующим соседним элементом
-                    if (shadow && shadow.classList.contains('awesome-marker-shadow')) {{
-                        shadow.style.display = 'none';
+                    if (sibling) {{
+                        sibling.style.display = 'none';
                     }}
                 }} else {{
                     marker.style.display = '';
-                    // Найти и показать тень маркера
-                    const shadow = marker.nextSibling; // предполагая, что тень является следующим соседним элементом
-                    if (shadow && shadow.classList.contains('awesome-marker-shadow')) {{
-                        shadow.style.display = '';
+                    if (sibling) {{
+                        sibling.style.display = '';
                     }}
                 }}
-            }});
+            }}});
             document.getElementById("slider-values").innerHTML = "Depth Range: " + values.map(val => val + "m").join(" to ");
-        }});
-    }});
+        }};
+    )}});
 </script>
 '''
 
