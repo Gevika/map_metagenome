@@ -49,7 +49,9 @@ slider_html = f'''
 <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const depths = {{depth_values_str}};
+        const depths = {depth_values_str};
+        const minDepth = {min_depth};
+        const maxDepth = {max_depth};
         const markers = document.querySelectorAll(".leaflet-interactive");
         markers.forEach((marker, idx) => {
             marker.setAttribute('data-depth', depths[idx]);
