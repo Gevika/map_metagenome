@@ -36,7 +36,6 @@ for index, row in df.iterrows():
         icon=icon
     ).add_to(m)
 
-m.get_root().html.add_child(folium.Element('<script type="text/javascript">$(document).ready(function() {$(".leaflet-shadow-pane").empty();});</script>'))
 m.save("index.html")
 
 depth_values = [str(row["depth"]) for _, row in df.iterrows()]
