@@ -48,60 +48,60 @@ slider_html = f'''
 <p id="slider-values" style="text-align: center;"></p>
 <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {{
         const depths = {depth_values_str};
         const minDepth = {min_depth};
         const maxDepth = {max_depth};
         const markers = document.querySelectorAll(".leaflet-interactive");
-        markers.forEach((marker, idx) => {
+        markers.forEach((marker, idx) => {{
             marker.setAttribute('data-depth', depths[idx]);
-        });
+        }});
         
         // Инициализация ползунка
         var slider = document.getElementById('depth-slider');
-        noUiSlider.create(slider, {
+        noUiSlider.create(slider, {{
             start: [{min_depth}, {max_depth}],
             connect: true,
-            range: {
+            range: {{
                 'min': {min_depth},
                 'max': {max_depth}
-            },
+            }},
             tooltips: [true, true],
-            format: {
-                to: function(value) {
+            format: {{
+                to: function(value) {{
                     return value.toFixed(1);
-                },
-                from: function(value) {
+                }},
+                from: function(value) {{
                     return value;
-                }
-            }
-        });
+                }}
+            }}
+        }});
         
         // Обновление видимости маркеров в соответствии с значениями ползунка
-        slider.noUiSlider.on('update', function (values, handle) {
+        slider.noUiSlider.on('update', function (values, handle) {{
             const min_val = parseFloat(values[0]);
             const max_val = parseFloat(values[1]);
-            markers.forEach(marker => {
+            markers.forEach(marker => {{
                 const depth = parseFloat(marker.getAttribute('data-depth'));
-                if (depth < min_val || depth > max_val) {
+                if (depth < min_val || depth > max_val) {{
                     marker.style.display = 'none';
                     // Найти и скрыть тень маркера
                     const shadow = marker.nextSibling; // предполагая, что тень является следующим соседним элементом
-                    if (shadow && shadow.classList.contains('awesome-marker-shadow')) {
+                    if (shadow && shadow.classList.contains('awesome-marker-shadow')) {{
                         shadow.style.display = 'none';
-                    }
-                } else {
+                    }}
+                }} else {{
                     marker.style.display = '';
                     // Найти и показать тень маркера
                     const shadow = marker.nextSibling; // предполагая, что тень является следующим соседним элементом
-                    if (shadow && shadow.classList.contains('awesome-marker-shadow')) {
+                    if (shadow && shadow.classList.contains('awesome-marker-shadow')) {{
                         shadow.style.display = '';
-                    }
-                }
-            });
+                    }}
+                }}
+            }});
             document.getElementById("slider-values").innerHTML = "Depth Range: " + values.map(val => val + "m").join(" to ");
-        });
-    });
+        }});
+    }});
 </script>
 '''
 
