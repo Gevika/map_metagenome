@@ -47,9 +47,9 @@ slider_html = f'''
 <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {{
-        const depths = {{depth_values_str}};
-        const min_val = {{min_depth}};
-        const max_val = {{max_depth}};
+        const depths = {depth_values_str};
+        const min_val = {min_depth};
+        const max_val = {max_depth};
         const markers = document.querySelectorAll(".leaflet-interactive");
         markers.forEach((marker, idx) => {{
             marker.setAttribute('data-depth', depths[idx]);
@@ -83,7 +83,7 @@ slider_html = f'''
                 let sibling = marker.nextElementSibling;
                 while (sibling && sibling.style.transform !== markerTransform) {{
                     sibling = sibling.nextElementSibling;
-                }
+                }}
                 if (depth < min_val || depth > max_val) {{
                     marker.style.display = 'none';
                     if (sibling) {{
@@ -95,10 +95,10 @@ slider_html = f'''
                         sibling.style.display = '';
                     }}
                 }}
-            }}});
+            }});
             document.getElementById("slider-values").innerHTML = "Depth Range: " + values.map(val => val + "m").join(" to ");
         }});
-        }});
+    }});
 </script>
 '''
 
