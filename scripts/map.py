@@ -84,7 +84,7 @@ slider_html = f'''
                 if (depth < min_val || depth > max_val) {{
                     marker.style.display = 'none';
                 }} else {{
-                    marker.style.display = '';
+                    marker.style.display = 'block';
                 }}
             }});
             document.getElementById("slider-values").innerHTML = "Depth Range: " + values.map(val => val + "m").join(" to ");
