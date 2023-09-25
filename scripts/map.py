@@ -42,6 +42,11 @@ depth_values_str = json.dumps(depth_values)
 
 slider_html = f'''
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css">
+<style>
+    .awesome-marker-shadow {{
+        display: none !important;
+    }}
+</style>
 <div id="depth-slider" style="margin-top: 50px; width: 80%; margin-left: 10%;"></div>
 <p id="slider-values" style="text-align: center;"></p>
 <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
@@ -77,28 +82,12 @@ slider_html = f'''
         slider.noUiSlider.on('update', function (values, handle) {{
             const min_val = parseFloat(values[0]);
             const max_val = parseFloat(values[1]);
-            console.log('Slider updated:', min_val, max_val);
             markers.forEach(marker => {{
                 const depth = parseFloat(marker.getAttribute('data-depth'));
-                const markerTransform = marker.style.transform;
-                console.log('Marker:', marker, 'Depth:', depth, 'Transform:', markerTransform);
-                let shadow = null;
-                document.querySelectorAll('.awesome-marker-shadow').forEach(shadowCandidate => {{
-                    if (shadowCandidate.style.transform === markerTransform) {{
-                        shadow = shadowCandidate;
-                    }}
-                }});
-                console.log('Found shadow:', shadow);
                 if (depth < min_val || depth > max_val) {{
                     marker.style.display = 'none';
-                    if (shadow) {{
-                        shadow.style.display = 'none';
-                    }}
                 }} else {{
                     marker.style.display = '';
-                    if (shadow) {{
-                        shadow.style.display = '';
-                    }}
                 }}
             }});
             document.getElementById("slider-values").innerHTML = "Depth Range: " + values.map(val => val + "m").join(" to ");
