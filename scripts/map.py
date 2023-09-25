@@ -106,6 +106,21 @@ slider_html = f'''
         let grayVisible = true;
         let greenVisible = true;
         
+        function toggleMarkers(color, isVisible) {{
+            const colorMapping = {{
+                'red': 'rgb(255, 0, 0)',
+                'gray': 'rgb(128, 128, 128)',
+                'green': 'rgb(0, 128, 0)'
+            }};
+            const rgbColor = colorMapping[color];
+            markers.forEach(marker => {{
+                const markerColor = marker.querySelector('i').style.backgroundColor;
+                if (markerColor === rgbColor) {{
+                    marker.style.display = isVisible ? '' : 'none';
+                }}
+            }});
+        }}
+        
         redButton.addEventListener('click', function() {{
             redVisible = !redVisible;
             toggleMarkers('red', redVisible);
@@ -120,15 +135,6 @@ slider_html = f'''
             greenVisible = !greenVisible;
             toggleMarkers('green', greenVisible);
         }});
-        
-        function toggleMarkers(color, isVisible) {{
-            markers.forEach(marker => {{
-                const markerColor = marker.querySelector('i').style.backgroundColor;
-                if (markerColor === color) {{
-                    marker.style.display = isVisible ? '' : 'none';
-                }}
-            }});
-        }}
     }});
 </script>
 '''
