@@ -77,15 +77,18 @@ slider_html = f'''
         slider.noUiSlider.on('update', function (values, handle) {{
             const min_val = parseFloat(values[0]);
             const max_val = parseFloat(values[1]);
+            console.log('Slider updated:', min_val, max_val);
             markers.forEach(marker => {{
                 const depth = parseFloat(marker.getAttribute('data-depth'));
                 const markerTransform = marker.style.transform;
+                console.log('Marker:', marker, 'Depth:', depth, 'Transform:', markerTransform);
                 let shadow = null;
                 document.querySelectorAll('.awesome-marker-shadow').forEach(shadowCandidate => {{
                     if (shadowCandidate.style.transform === markerTransform) {{
                         shadow = shadowCandidate;
                     }}
                 }});
+                console.log('Found shadow:', shadow);
                 if (depth < min_val || depth > max_val) {{
                     marker.style.display = 'none';
                     if (shadow) {{
