@@ -100,6 +100,19 @@ slider_html = f'''
 with open('index.html', 'a') as file:
     file.write(slider_html)
 
+favicon_link = '<link rel="icon" href="images/git_img_link_map.png" type="image/x-icon" />'
+
+# Read the content of the file
+with open('index.html', 'r') as file:
+    content = file.read()
+
+# Find the end of the <head> section and insert the favicon link
+head_end_index = content.find('</head>')
+new_content = content[:head_end_index] + favicon_link + content[head_end_index:]
+
+with open('index.html', 'w') as file:
+    file.write(new_content)
+
 fig, ax = plt.subplots(figsize=(15, 10), subplot_kw={'projection': ccrs.PlateCarree()})
 ax.set_title('World Map with Data Points', fontsize=16)
 ax.add_feature(cfeature.COASTLINE)
