@@ -81,9 +81,9 @@ slider_html = f'''
                 const depth = parseFloat(marker.getAttribute('data-depth'));
                 const markerTransform = marker.style.transform;
                 let shadow = null;
-                document.querySelectorAll('.awesome-marker-shadow').forEach(shadowMarker => {{
-                    if (shadowMarker.style.transform === markerTransform) {{
-                        shadow = shadowMarker;
+                document.querySelectorAll('.awesome-marker-shadow').forEach(shadowCandidate => {{
+                    if (shadowCandidate.style.transform === markerTransform) {{
+                        shadow = shadowCandidate;
                     }}
                 }});
                 if (depth < min_val || depth > max_val) {{
