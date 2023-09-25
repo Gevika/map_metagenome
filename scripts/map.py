@@ -99,7 +99,7 @@ slider_html = f'''
 # HTML-код для логотипа
 logo_html = '''
     <div style="position: fixed; top: 10px; right: 50px; z-index: 9999;">
-        <img src="URL_ВАШЕГО_ЛОГОТИПА" alt="logo" style="width:100px;height:100px;">
+        <img src="images/git_img_link_map.png" alt="logo" style="width:100px;height:100px;">
     </div>
 '''
 
