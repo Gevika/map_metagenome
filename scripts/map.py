@@ -49,6 +49,11 @@ slider_html = f'''
 </style>
 <div id="depth-slider" style="margin-top: 50px; width: 80%; margin-left: 10%;"></div>
 <p id="slider-values" style="text-align: center;"></p>
+<div id="button-container" style="text-align: center; margin-top: 20px;">
+    <button id="red-button" style="background-color: red; color: white;">Toggle Red Markers</button>
+    <button id="gray-button" style="background-color: gray; color: white;">Toggle Gray Markers</button>
+    <button id="green-button" style="background-color: green; color: white;">Toggle Green Markers</button>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {{
@@ -92,6 +97,38 @@ slider_html = f'''
             }});
             document.getElementById("slider-values").innerHTML = "Depth Range: " + values.map(val => val + "m").join(" to ");
         }});
+        
+        const redButton = document.getElementById('red-button');
+        const grayButton = document.getElementById('gray-button');
+        const greenButton = document.getElementById('green-button');
+        
+        let redVisible = true;
+        let grayVisible = true;
+        let greenVisible = true;
+        
+        redButton.addEventListener('click', function() {{
+            redVisible = !redVisible;
+            toggleMarkers('red', redVisible);
+        }});
+        
+        grayButton.addEventListener('click', function() {{
+            grayVisible = !grayVisible;
+            toggleMarkers('gray', grayVisible);
+        }});
+        
+        greenButton.addEventListener('click', function() {{
+            greenVisible = !greenVisible;
+            toggleMarkers('green', greenVisible);
+        }});
+        
+        function toggleMarkers(color, isVisible) {{
+            markers.forEach(marker => {{
+                const markerColor = marker.querySelector('i').style.backgroundColor;
+                if (markerColor === color) {{
+                    marker.style.display = isVisible ? '' : 'none';
+                }}
+            }});
+        }}
     }});
 </script>
 '''
