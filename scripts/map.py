@@ -96,16 +96,9 @@ slider_html = f'''
 </script>
 '''
 
-# HTML-код для логотипа
-logo_html = '''
-    <div style="position: fixed; top: 10px; right: 50px; z-index: 9999;">
-        <img src="images/git_img_link_map.png" alt="logo" style="width:100px;height:100px;">
-    </div>
-'''
-
 # Add JS to the HTML file
 with open('index.html', 'a') as file:
-    file.write(slider_html + logo_html)
+    file.write(slider_html)
 
 fig, ax = plt.subplots(figsize=(15, 10), subplot_kw={'projection': ccrs.PlateCarree()})
 ax.set_title('World Map with Data Points', fontsize=16)
