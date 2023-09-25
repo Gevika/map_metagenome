@@ -80,9 +80,12 @@ slider_html = f'''
             markers.forEach(marker => {{
                 const depth = parseFloat(marker.getAttribute('data-depth'));
                 const markerTransform = marker.style.transform;
-                let parent = marker.parentElement;
-                let children = Array.from(parent.children);
-                let shadow = children.find(child => child.style.transform === markerTransform && child !== marker);
+                let shadow = null;
+                document.querySelectorAll('.awesome-marker-shadow').forEach(shadowMarker => {{
+                    if (shadowMarker.style.transform === markerTransform) {{
+                        shadow = shadowMarker;
+                    }}
+                }});
                 if (depth < min_val || depth > max_val) {{
                     marker.style.display = 'none';
                     if (shadow) {{
