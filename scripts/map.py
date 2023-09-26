@@ -62,7 +62,16 @@ slider_html = f'''
         const max_val = {max_depth};
         const markers = document.querySelectorAll(".leaflet-interactive");
         markers.forEach((marker, idx) => {{
-            marker.setAttribute('data-depth', depths[idx]);
+            const depth = depths[idx];
+            let valueType;
+            if (depth === "unknown") {{
+                valueType = 'unknown';
+            }} else if (depth === "nan") {{
+                valueType = 'none';
+            }} else {{
+                valueType = 'float';
+            }}
+            marker.setAttribute('data-value-type', valueType);
         }});
         
         var slider = document.getElementById('depth-slider');
@@ -102,39 +111,32 @@ slider_html = f'''
         const grayButton = document.getElementById('gray-button');
         const greenButton = document.getElementById('green-button');
         
-        let redVisible = true;
-        let grayVisible = true;
-        let greenVisible = true;
+        let noneVisible = true;
+        let unknownVisible = true;
+        let floatVisible = true;
         
-        function toggleMarkers(color, isVisible) {{
-            const colorMapping = {{
-                'red': 'rgb(255, 0, 0)',
-                'gray': 'rgb(128, 128, 128)',
-                'green': 'rgb(0, 128, 0)'
-            }};
-            const rgbColor = colorMapping[color];
+        function toggleMarkers(valueType, isVisible) {{
             markers.forEach(marker => {{
-                const innerElement = marker.querySelector('i');
-                const markerColor = innerElement.style.backgroundColor;
-                if (markerColor === rgbColor) {{
+                const value = marker.getAttribute('data-value-type');
+                if (value === valueType) {{
                     marker.style.display = isVisible ? '' : 'none';
                 }}
             }});
         }}
         
         redButton.addEventListener('click', function() {{
-            redVisible = !redVisible;
-            toggleMarkers('red', redVisible);
+            noneVisible = !noneVisible;
+            toggleMarkers('none', noneVisible);
         }});
         
         grayButton.addEventListener('click', function() {{
-            grayVisible = !grayVisible;
-            toggleMarkers('gray', grayVisible);
+            unknownVisible = !unknownVisible;
+            toggleMarkers('unknown', unknownVisible);
         }});
         
         greenButton.addEventListener('click', function() {{
-            greenVisible = !greenVisible;
-            toggleMarkers('green', greenVisible);
+            floatVisible = !floatVisible;
+            toggleMarkers('float', floatVisible);
         }});
     }});
 </script>
