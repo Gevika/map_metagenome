@@ -71,6 +71,7 @@ slider_html = f'''
             }} else {{
                 valueType = 'float';
             }}
+            marker.setAttribute('data-depth', depth);
             marker.setAttribute('data-value-type', valueType);
         }});
         
