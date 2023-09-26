@@ -114,7 +114,8 @@ slider_html = f'''
             }};
             const rgbColor = colorMapping[color];
             markers.forEach(marker => {{
-                const markerColor = marker.querySelector('i').style.backgroundColor;
+                const innerElement = marker.querySelector('i');
+                const markerColor = innerElement.style.backgroundColor;
                 if (markerColor === rgbColor) {{
                     marker.style.display = isVisible ? '' : 'none';
                 }}
