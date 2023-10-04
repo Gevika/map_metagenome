@@ -22,7 +22,7 @@ def get_color(depth):
         return 'red'
 
 # Create a Folium map object and iterate through DataFrame rows to add markers
-m = folium.Map(location=[47, 2], zoom_start=3, tiles="http://services.arcgisonline.com/arcgis/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}")
+m = folium.Map(location=[47, 2], zoom_start=3, tiles="http://services.arcgisonline.com/arcgis/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}", attr="© OpenStreetMap contributors")
 for index, row in df.iterrows():
     value1 = row['archive_project']
     value2 = row['study_primary_focus']
