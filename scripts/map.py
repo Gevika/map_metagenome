@@ -5,6 +5,8 @@ import cartopy.feature as cfeature
 import folium
 import json
 import re 
+import io
+from PIL import Image
 
 # Read data from the URL into a DataFrame and correct the 'depth' column to numeric values
 df = pd.read_csv("https://raw.githubusercontent.com/Gevika/map_metagenome/main/data/data.tsv", sep="\\t", decimal=".", engine='python')
@@ -181,3 +183,7 @@ new_content = re.sub(r'<!-- START-MAP-INSERT -->.*<!-- END-MAP-INSERT -->',
                      content, flags=re.DOTALL)
 with open('README.md', 'w') as file:
     file.write(new_content)
+
+img_data = m._to_png(5)
+img = Image.open(io.BytesIO(img_data))
+img.save('images/git_img_map_folium.png')
