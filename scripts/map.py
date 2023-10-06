@@ -45,9 +45,6 @@ m.save("index.html")
 depth_values = [str(row["depth"]) for _, row in df.iterrows()]
 depth_values_str = json.dumps(depth_values)
 
-study_process_values = df['study_process'].unique().tolist()
-study_process_values_str = json.dumps(study_process_values)
-
 slider_html = f'''
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.css">
 <style>
@@ -154,110 +151,9 @@ slider_html = f'''
 </script>
 '''
 
-accordion_html = f'''
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<style>
-    #accordion-container {{
-        width: 80%;
-        margin: auto;
-        margin-top: 20px;
-    }}
-    .accordion {{
-        cursor: pointer;
-        padding: 18px;
-        width: 100%;
-        text-align: left;
-        border: none;
-        outline: none;
-        transition: 0.4s;
-    }}
-    .panel {{
-        padding: 0 18px;
-        display: none;
-        background-color: white;
-        overflow: hidden;
-    }}
-</style>
-<div id="accordion-container">
-    <button class="accordion">Choose Study Process</button>
-    <div class="panel">
-        <select id="study-process-select">
-            <option value="">All</option>
-            {"".join([f'<option value="{value}">{value}</option>' for value in study_process_values])}
-        </select>
-    </div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {{
-        const markers = document.querySelectorAll(".leaflet-interactive");
-        const studyProcessSelect = document.getElementById('study-process-select');
-        const accordion = document.querySelector('.accordion');
-        const panel = document.querySelector('.panel');
-
-        accordion.addEventListener('click', function() {{
-            this.classList.toggle('active');
-            if (panel.style.display === "block") {{
-                panel.style.display = "none";
-            }} else {{
-                panel.style.display = "block";
-            }}
-        }});
-
-        studyProcessSelect.addEventListener('change', function() {{
-            const selectedValue = this.value;
-            markers.forEach(marker => {{
-                const studyProcess = marker.getAttribute('data-study-process');
-                if (selectedValue === '' || studyProcess === selectedValue) {{
-                    marker.setAttribute('data-study-process-visible', 'true');
-                }} else {{
-                    marker.setAttribute('data-study-process-visible', 'false');
-                }}
-            }});
-            updateMarkerVisibility();
-        }});
-
-        markers.forEach((marker, idx) => {{
-            const studyProcess = {study_process_values_str}[idx];
-            marker.setAttribute('data-study-process', studyProcess);
-            marker.setAttribute('data-study-process-visible', 'true');
-        }});
-
-        function updateMarkerVisibility() {{
-            const slider = document.getElementById('depth-slider');
-            const [min_val, max_val] = slider.noUiSlider.get().map(parseFloat);
-            markers.forEach(marker => {{
-                const depth = parseFloat(marker.getAttribute('data-depth'));
-                const isStudyProcessVisible = marker.getAttribute('data-study-process-visible') === 'true';
-                if ((depth < min_val || depth > max_val) || !isStudyProcessVisible) {{
-                    marker.style.display = 'none';
-                }} else {{
-                    marker.style.display = '';
-                }}
-            }});
-        }}
-
-        var slider = document.getElementById('depth-slider');
-        slider.noUiSlider.on('update', function (values, handle) {{
-            updateMarkerVisibility();
-        }});
-    }});
-</script>
-'''
-
-combined_html = f'''
-{slider_html}
-{accordion_html}
-'''
-
-with open('index.html', 'r') as file:
-    content = file.read()
-
-body_end_index = content.find('</body>')
-
-new_content = content[:body_end_index] + combined_html + content[body_end_index:]
-
-with open('index.html', 'w') as file:
-    file.write(new_content)
+# Append the slider code to the previously saved map HTML file
+with open('index.html', 'a') as file:
+    file.write(slider_html)
 
 # Define the favicon link and insert it into the <head> section of the map HTML file
 favicon_link = '<link rel="icon" href="images/git_img_link_map.png" type="image/x-icon" />'
