@@ -55,9 +55,9 @@ slider_html = f'''
 <div id="depth-slider" style="margin-top: 50px; width: 80%; margin-left: 10%;"></div>
 <p id="slider-values" style="text-align: center;"></p>
 <div id="button-container" style="text-align: center; margin-top: 20px;">
-    <button id="red-button" style="background-color: red; color: white;">Toggle Red Markers</button>
-    <button id="gray-button" style="background-color: gray; color: white;">Toggle Gray Markers</button>
-    <button id="green-button" style="background-color: green; color: white;">Toggle Green Markers</button>
+    <button id="red-button" style="background-color: red; color: white;">Toggle "None" values of depth</button>
+    <button id="gray-button" style="background-color: gray; color: white;">Toggle "unknown" values of depth</button>
+    <button id="green-button" style="background-color: green; color: white;">Toggle float values of depth</button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/nouislider@14.7.0/distribute/nouislider.min.js"></script>
 <script>
