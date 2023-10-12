@@ -9,7 +9,8 @@ Order of Action:
 
 2) Download the parsing script **parse_bioproject.py** from the [OilMetagenomesDB](https://github.com/agni-bioinformatics-lab/OilMetagenomesDB) repository
 
-3) Navigate in the console to the folder where your script is located
+3) Na
+vigate in the console to the folder where your script is located
 
 4) Use the **parse_bioproject.py** script to collect metadata from NCBI
 ```ruby
