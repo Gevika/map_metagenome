@@ -7,7 +7,7 @@
 Order of Action:
 1) Find the NCBI bioproject identifier in the article (e.g. PRJNA729662)
 
-2) Download the parsing script **parse_bioproject.py**
+2) Download the parsing script **parse_bioproject.py** from the [OilMetagenomesDB](https://github.com/agni-bioinformatics-lab/OilMetagenomesDB) repository
 
 3) Navigate in the console to the folder where your script is located
 
@@ -54,26 +54,30 @@ project_name | publication_year | publication_doi | sample_name | archive | arch
 
 ![Image alt](https://github.com/Gevika/map_metagenome/raw/main/images/instructions/examples.png)
 
-13) Go back to github. Open the tables in the repository and click on `pencil` to modify the table *common_libraries*.
+13) Go back to your fork on github. Create a **new branch** and name it in project_name in AuthorYear format
+
+![Image alt](https://github.com/Gevika/map_metagenome/raw/main/images/instructions/new_branch.png)
+
+14) Open the tables in the repository and click on `pencil` to modify the table *common_libraries*.
 
 ![Image alt](https://github.com/Gevika/map_metagenome/raw/main/images/instructions/git1.png)
 
-14) Go to the bottom of the table and enter your data and click the `Commit changes` button
+15) Go to the bottom of the table and enter your data and click the `Commit changes` button
 
 ![Image alt](https://github.com/Gevika/map_metagenome/raw/main/images/instructions/add_libraries.png)
 
-15) Specify project_name in AuthorYear format in the commit name
+16) Specify project_name in AuthorYear format in the commit name
 
 ![Image alt](https://github.com/Gevika/map_metagenome/raw/main/images/instructions/SierraGarcia2020.png)
 
-16) Repeat steps 13-15 for the *common_samples* table
+17) Repeat steps 13-15 for the *common_samples* table
 
-17) Go back to the main page of your repository fork and click `Contribute` to create a pull request and send changes to our repository
+18) Go back to the main page of your repository fork. Note that the branch is not main, but the branch you created for the article you are adding! Click the `Contribute` button to create a pull request and submit your changes to our repository
 
 ![Image alt](https://github.com/Gevika/map_metagenome/raw/main/images/instructions/open_PR.png)
 
-18) Also specify project_name in AuthorYear format in the name of the created pull request and click the `Create pull request` button
+19) Also specify project_name in AuthorYear format in the name of the created pull request and click the `Create pull request` button
 
 ![Image alt](https://github.com/Gevika/map_metagenome/raw/main/images/instructions/create_PR.png)
 
-19) This completes the data addition, thank you for your participation!
+20) This completes the data addition, thank you for your participation!
